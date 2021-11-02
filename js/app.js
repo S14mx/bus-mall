@@ -2,7 +2,7 @@
 
 //global variables/arrays
 const container = document.querySelector('#imgs');
-const button = document.querySelector('.button');
+let button = document.querySelector('.button');
 let imageOne = document.querySelector('.img-one');
 let imageTwo = document.querySelector('.img-two');
 let imageThree = document.querySelector('.img-three');
@@ -11,7 +11,7 @@ const results = document.querySelector('ul');
 let allImgs = [];
 let imgNames = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'tauntaun', 'unicorn', 'water-can', 'wine-glass'];
 let clicks = 0;
-const clicksAllowed = 3;
+const clicksAllowed = 25;
 
 //constructor
 function Image(name, fileExtension = 'jpg') {
@@ -32,7 +32,7 @@ new Image('sweep', 'png');
 
 //random number/image function
 function selectRandomImg() {
-  return Math.floor(Math.random() * allImgs.length);
+  return Math.floor(Math.random() * allImgs.length + 1);
 }
 
 //render image function
@@ -63,6 +63,7 @@ function renderImg() {
   allImgs[img3].views++;
 }
 
+//event handler
 function handleImageClick(event) {
   if (event.target === container) {
     alert('Please click on an image');
@@ -70,19 +71,13 @@ function handleImageClick(event) {
   } else {
     clicks++;
   }
-  // let likesArray = [];
-  // let clickedImage = event.target.alt;
-  // likesArray.push(clickedImage);
-  // if (likesArray.includes(clickedImage)) {
-  //   clickedImage.likes++;
+
   let clickedImage = event.target.alt;
-  for (let i = 0; i < allImgs.length; i++){
+  for (let i = 0; i < allImgs.length; i++) {
     if (clickedImage === allImgs[i].name) {
-      allImgs[i].likes ++;
+      allImgs[i].likes++;
     }
   }
-
-
 
   renderImg();
 
@@ -94,6 +89,7 @@ function handleImageClick(event) {
   }
 }
 
+//render results
 function handleButtonClick() {
   for (let i = 0; i < allImgs.length; i++) {
     let li = document.createElement('li');
@@ -103,6 +99,5 @@ function handleButtonClick() {
 }
 
 renderImg();
-
 
 container.addEventListener('click', handleImageClick);
