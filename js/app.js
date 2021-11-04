@@ -2,13 +2,12 @@
 
 //global variables/arrays
 const container = document.querySelector('#imgs');
-let button = document.querySelector('.button');
 let imageOne = document.querySelector('.img-one');
 let imageTwo = document.querySelector('.img-two');
 let imageThree = document.querySelector('.img-three');
-const results = document.querySelector('ul');
 
 let allImgs = [];
+let images = [];
 let imgNames = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'tauntaun', 'unicorn', 'water-can', 'wine-glass'];
 let clicks = 0;
 const clicksAllowed = 25;
@@ -32,24 +31,22 @@ new Image('sweep', 'png');
 
 //random number/image function
 function selectRandomImg() {
-  return Math.floor(Math.random() * allImgs.length + 1);
+  return Math.floor(Math.random() * allImgs.length);
 }
 
-//render image function
+//render image function (first 6 are unique)
 function renderImg() {
-  let images = [];
-  let img1 = selectRandomImg();
-  images.push(img1);
-  let img2 = selectRandomImg();
-  while (images.includes(img2)) {
-    img2 = selectRandomImg();
+  while (images.length < 6) {
+    let randNum = selectRandomImg();
+    if (!images.includes(randNum)) {
+      images.push(randNum);
+    }
   }
-  images.push(img2);
-  let img3 = selectRandomImg();
-  while (images.includes(img3)) {
-    img3 = selectRandomImg();
-  }
-  images.push(img3);
+
+  let img1 = images.shift();
+  let img2 = images.shift();
+  let img3 = images.shift();
+
   imageOne.src = allImgs[img1].src;
   imageOne.alt = allImgs[img1].name;
   allImgs[img1].views++;
@@ -81,21 +78,73 @@ function handleImageClick(event) {
 
   renderImg();
 
+  //stop clicks function
   if (clicks === clicksAllowed) {
     container.removeEventListener('click', handleImageClick);
-    button.addEventListener('click', handleButtonClick);
-    button.className = 'clicks-allowed';
-
+    renderChart();
   }
 }
 
-//render results
-function handleButtonClick() {
+//chart render funcrion with bar chart from chart.js
+function renderChart() {
+  let imgNames = [];
+  let imgViews = [];
+  let imgLikes = [];
   for (let i = 0; i < allImgs.length; i++) {
-    let li = document.createElement('li');
-    li.textContent = `${allImgs[i].name} had ${allImgs[i].likes} likes and was viewed ${allImgs[i].views} times.`;
-    results.appendChild(li);
+    imgNames.push(allImgs[i].name);
+    imgViews.push(allImgs[i].views);
+    imgLikes.push(allImgs[i].likes);
   }
+  const labels = imgNames;
+  const data = {
+    labels: labels,
+    datasets: [{
+      label: 'Views',
+      data: imgViews,
+      minBarLength: 10,
+      hoverBackgroundColor: 'rgba(255, 162, 139, 0.8)',
+      backgroundColor:  [
+        'rgba(234, 240, 178, 1)'
+      ],
+      borderColor: [
+        'rgb(234, 240, 178)',
+      ],
+      borderWidth: 1
+    },
+    {
+      label: 'Likes',
+      data: imgLikes,
+      minBarLength: 10,
+      hoverBackgroundColor: 'rgba(255, 162, 139, 0.8)',
+      backgroundColor: [
+        'rgba(88, 247, 86, 1)'
+      ],
+      borderColor: [
+        'rgb(88, 247, 86)'
+      ],
+      borderWidth: 1
+    }]
+  };
+
+  const config = {
+    type: 'bar',
+    data: data,
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    },
+  };
+
+  const myChart = new Chart(
+    document.getElementById('myChart'),
+    config
+  );
+  let footer = document.querySelector('.footer');
+  footer.textContent = 'Thank you for participating!';
+
 }
 
 renderImg();
