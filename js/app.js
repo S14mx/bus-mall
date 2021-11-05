@@ -29,7 +29,8 @@ for (let i = 0; i < imgNames.length; i++) {
 //manually creating instance for png image
 new Image('sweep', 'png');
 
-function capitalize() {
+//function that capitalizes names
+function capitalizeNames() {
   let firstLetter = '';
   let combine = '';
   for (let i = 0; i < allImgs.length; i++) {
@@ -38,9 +39,6 @@ function capitalize() {
     allImgs[i].name = combine;
   }
 }
-
-
-
 
 //random number/image function
 function selectRandomImg() {
@@ -158,7 +156,7 @@ function renderChart() {
   let footer = document.querySelector('.footer');
   footer.textContent = 'Thank you for participating!';
 }
-capitalize();
+capitalizeNames();
 renderImg();
 
 container.addEventListener('click', handleImageClick);
