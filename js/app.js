@@ -29,6 +29,19 @@ for (let i = 0; i < imgNames.length; i++) {
 //manually creating instance for png image
 new Image('sweep', 'png');
 
+function capitalize() {
+  let firstLetter = '';
+  let combine = '';
+  for (let i = 0; i < allImgs.length; i++) {
+    firstLetter = allImgs[i].name.charAt(0);
+    combine = firstLetter.toUpperCase() + allImgs[i].name.slice(1);
+    allImgs[i].name = combine;
+  }
+}
+
+
+
+
 //random number/image function
 function selectRandomImg() {
   return Math.floor(Math.random() * allImgs.length);
@@ -85,7 +98,7 @@ function handleImageClick(event) {
   }
 }
 
-//chart render funcrion with bar chart from chart.js
+//chart render function with bar chart from chart.js
 function renderChart() {
   let imgNames = [];
   let imgViews = [];
@@ -103,7 +116,7 @@ function renderChart() {
       data: imgViews,
       minBarLength: 10,
       hoverBackgroundColor: 'rgba(255, 162, 139, 0.8)',
-      backgroundColor:  [
+      backgroundColor: [
         'rgba(234, 240, 178, 1)'
       ],
       borderColor: [
@@ -144,9 +157,8 @@ function renderChart() {
   );
   let footer = document.querySelector('.footer');
   footer.textContent = 'Thank you for participating!';
-
 }
-
+capitalize();
 renderImg();
 
 container.addEventListener('click', handleImageClick);
