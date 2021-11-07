@@ -13,21 +13,24 @@ let clicks = 0;
 const clicksAllowed = 25;
 
 //constructor
-function Image(name, fileExtension = 'jpg') {
+function Image(name, src, likes = 0, views = 0) { //fileExtension = 'jpg'
   this.name = name;
-  this.src = `img/${name}.${fileExtension}`;
-  this.likes = 0;
-  this.views = 0;
+  this.src = src; //`img/${name}.${fileExtension}`
+  this.likes = likes;
+  this.views = views;
   allImgs.push(this);
 }
 
 //creating image instances with jpg format
-for (let i = 0; i < imgNames.length; i++) {
-  new Image(imgNames[i]);
+function createProductInstances() {
+  for (let i = 0; i < imgNames.length; i++) {
+    new Image(imgNames[i], `img/${imgNames[i]}.jpg`);
+  }
+  //manually creating instance for png image
+  new Image('sweep', 'img/sweep.png');
+  capitalizeNames();
 }
-
-//manually creating instance for png image
-new Image('sweep', 'png');
+createProductInstances();
 
 //function that capitalizes names
 function capitalizeNames() {
@@ -70,6 +73,35 @@ function renderImg() {
   imageThree.alt = allImgs[img3].name;
   allImgs[img3].views++;
 }
+
+//Store products
+function setProducts() {
+  let stringifiedImgs = JSON.stringify(allImgs);
+  localStorage.setItem('product', stringifiedImgs);
+}
+
+
+//Reinstanciate function
+function reinstanciate(name, src, likes, views) {
+  new Image(name, src, likes, views);
+  allImgs.shift();
+}
+
+//Retrieve products
+function getProducts() {
+  let potentialProducts = localStorage.getItem('product');
+  if (potentialProducts) {
+    let parsedProducts = JSON.parse(potentialProducts);
+    for (let order of parsedProducts) {
+      let name = order.name;
+      let src = order.src;
+      let likes = order.likes;
+      let views = order.views;
+      reinstanciate(name, src, likes, views);
+    }
+  }
+}
+
 
 //event handler
 function handleImageClick(event) {
@@ -155,8 +187,12 @@ function renderChart() {
   );
   let footer = document.querySelector('.footer');
   footer.textContent = 'Thank you for participating!';
+  setProducts();
 }
-capitalizeNames();
+
 renderImg();
 
+
 container.addEventListener('click', handleImageClick);
+getProducts();
+
